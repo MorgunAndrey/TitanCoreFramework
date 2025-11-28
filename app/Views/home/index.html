@@ -1,0 +1,426 @@
+<!-- resources/views/home/index.html -->
+
+{% extends "layouts/head.html" %}
+
+{% block title %}Главная страница TitanCore Framework{% endblock %}
+
+{% block content %}
+     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">TitanCore Framework</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+       
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="#menu-features">Технологии</a></li>
+                <li class="nav-item"><a class="nav-link" href="#menu-gallery">Галерея</a></li>
+                <li class="nav-item"><a class="nav-link" href="#menu-pricing">Архитектура</a></li>
+                <li class="nav-item"><a class="nav-link" href="#openmap">Контакты</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/register">Регистрация</a></li>
+                <li class="nav-item"><a class="nav-link" href="/login">Войти</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <!-- Возможности -->
+    <section class="features" id="menu-features">  
+        <div class="container">
+            <div class="text-center">
+                <div class="divider"></div>
+                <h1 class="mb-4">TitanCore Framework</h1>
+                <p class="lead">Современный Python full-stack MVC фреймворк для разработки веб-приложений</p>
+                <p class="mb-4">Объединяя мощь FastAPI и гибкость React, наш фреймворк обеспечивает комплексное решение для full-stack разработки</p>
+            </div>
+
+            <div class="row">
+                <!-- Backend Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3">
+                                <i class="bi bi-code-slash fs-1" style="color: #4b64ae;"></i>
+                            </div>
+                            <a href="backend.html" class="text-decoration-none">
+                                <h2 class="mb-3" style="color: #4b64ae;">Backend Module</h2>
+                            </a>
+                            <div class="text-center">
+                            <div class="d-inline-block text-start">
+                                <div class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-lightning-charge-fill text-warning me-2"></i>
+                                    <span>FastAPI для высокопроизводительного бэкенда</span>
+                                </div>
+                                <div class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                                    <span>Поддержка асинхронных операций</span>
+                                </div>
+                                <div class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-text text-info me-2"></i>
+                                    <span>Автоматическая документация API (Swagger/OpenAPI)</span>
+                                </div>
+                                <div class="mb-3 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span>Встроенная валидация данных (Pydantic)</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-database text-secondary me-2"></i>
+                                    <span>ORM интеграция (SQLAlchemy, Tortoise)</span>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frontend Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="feature-card h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3">
+                                <i class="bi bi-code-square fs-1" style="color: #093809;"></i>
+                            </div>
+                            <a href="frontend.html" class="text-decoration-none">
+                                <h2 class="mb-3" style="color: #093809;">Frontend Module</h2>
+                            </a>
+                            <div class="text-center">
+                                <div class="d-inline-block text-start">
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <i class="bi bi-filetype-tsx text-info me-2"></i>
+                                        <span>React с TypeScript поддержкой</span>
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <i class="bi bi-collection-fill text-primary me-2"></i>
+                                        <span>Готовый набор UI-компонентов</span>
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <i class="bi bi-signpost-split text-warning me-2"></i>
+                                        <span>Система маршрутизации (React Router)</span>
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <i class="bi bi-diagram-3-fill text-success me-2"></i>
+                                        <span>Управление состоянием (Redux/MobX)</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-plug-fill text-danger me-2"></i>
+                                        <span>Интеграция с бэкенд-API</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Дополнительные фичи -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="feature-card">
+                        <div class="card-body text-center p-4">
+                            <h3 class="mb-4">Ключевые преимущества</h3>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="feature-item p-3">
+                                        <i class="bi bi-box-seam fs-2 mb-2" style="color: #4b64ae;"></i>
+                                        <h4>Модульность</h4>
+                                        <p>Гибкая архитектура позволяет использовать только нужные компоненты</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="feature-item p-3">
+                                        <i class="bi bi-speedometer2 fs-2 mb-2" style="color: #4b64ae;"></i>
+                                        <h4>Производительность</h4>
+                                        <p>Оптимизирован для высоких нагрузок</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="feature-item p-3">
+                                        <i class="bi bi-shield-lock fs-2 mb-2" style="color: #4b64ae;"></i>
+                                        <h4>Безопасность</h4>
+                                        <p>Встроенные механизмы защиты и аутентификации</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Галерея -->
+<section class="gallery" id="menu-gallery">
+    <div class="container">
+        <div class="text-center">
+            <div class="divider"></div>
+            <h1 class="mb-3">ИНТЕРФЕЙС ФРЕЙМВОРКА</h1>
+            <p class="mb-5">Примеры интерфейсов и возможностей TitanCore Framework</p>
+        </div>
+
+        <div class="row">
+            <!-- Повторяющиеся элементы галереи -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/1.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/1.png" alt="Админ-панель" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Главная страница</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/2.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/2.png" alt="API Документация" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Регистрация</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/3.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/3.png" alt="Редактор кода" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Страница входа</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/4.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/4.png" alt="Мониторинг" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Забыли пароль</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/5.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/5.png" alt="База данных" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Восстановление пароля</h3>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <a href="#" class="port-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="/static/img/gallery/6.png">
+                    <span>+</span>
+                    <img src="/static/img/gallery/6.png" alt="Аутентификация" class="img-fluid">
+                </a>
+                <div class="text-center mt-3">
+                    <h3>Для авторизированных</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="menu-pricing">
+    <div class="container">
+        <div class="text-center">
+            <div class="divider"></div>
+            <h3 class="mb-3">АРХИТЕКТУРА ФРЕЙМВОРКА</h3>
+            <p class="mb-5">Структура директорий и модулей фреймворка</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <pre class="mb-0">
+├── app                                           # Основное приложение FastAPI
+│   ├── Console                                   # Консольные команды управления
+│   │   ├── Commands                              # Реализации консольных команд
+│   │   │   ├── Command.py                        # Базовый класс для всех консольных команд
+│   │   │   ├── MakeControllerCommand.py          # Генерация новых контроллеров
+│   │   │   ├── MakeMigrationCommand.py           # Создание файлов миграций БД
+│   │   │   ├── MakeModelCommand.py               # Генерация моделей данных
+│   │   │   ├── MigrateCommand.py                 # Применение миграций к БД
+│   │   │   └── SeedCommand.py                    # Заполнение БД тестовыми данными
+│   │   ├── Kernel.py                             # Ядро консоли - регистрация команд
+│   │   └── templates                             # Шаблоны для генерации кода
+│   │       └── web_model.jinja2                  # Шаблон генерации моделей
+│   ├── Controllers                               # HTTP контроллеры - обработка запросов
+│   │   ├── Auth                                  # Контроллеры аутентификации
+│   │   │   ├── ForgotPasswordController.py       # Восстановление пароля
+│   │   │   ├── LoginController.py                # Авторизация пользователя
+│   │   │   ├── RegisterController.py             # Регистрация пользователя
+│   │   │   └── ResetPasswordController.py        # Сброс пароля
+│   │   ├── Home                                  # Контроллеры главной страницы
+│   │   │   ├── HomeController.py                 # Домашняя страница
+│   │   └── Main                                  # Основные контроллеры приложения
+│   │       ├── MainController.py                 # Главный контроллер
+│   ├── Logging                                   # Система логирования приложения
+│   ├── main.py                                   # Точка входа - инициализация FastAPI
+│   ├── Middleware                                # Промежуточное ПО (middleware)
+│   │   ├── auth.py                               # Проверка аутентификации пользователя
+│   │   ├── not_auth.py                           # Обработка неаутентифицированных запросов
+│   ├── Models                                    # Модели данных (ORM)
+│   │   ├── PasswordResetToken.py                 # Модель токена сброса пароля
+│   │   └── User.py                               # Модель пользователя
+│   ├── Schedule                                  # Планировщик задач
+│   ├── Services                                  # Бизнес-логика приложения
+│   │   ├── CsrfService.py                        # Генерация и проверка CSRF-токенов
+│   │   ├── EmailService.py                       # Отправка электронной почты
+│   │   └── RequestParser.py                      # Парсинг и валидация запросов
+│   └── Views                                     # HTML шаблоны приложения
+│       ├── auth                                  # Шаблоны аутентификации
+│       │   └── auth.html                         # Основной шаблон аутентификации
+│       ├── home                                  # Шаблоны главной страницы
+│       │   └── index.html                        # Домашняя страница
+│       ├── layouts                               # Макеты страниц
+│       │   ├── headauth.html                     # Заголовок для страниц аутентификации
+│       │   └── head.html                         # Основной заголовок страниц
+│       └── main                                  # Основные шаблоны приложения
+│           └── index.html                        # Главная страница приложения
+├── components                                    # React-компоненты фронтенда
+│   └── auth                                      # UI для аутентификации
+│       ├── app.js                                # Точка входа React-приложения
+│       ├── ForgotPassword.js                     # Форма восстановления пароля
+│       ├── Login.js                              # Компонент формы логина
+│       ├── Register.js                           # Компонент регистрации
+│       ├── ResetPassword.js                      # Форма сброса пароля
+│       ├── RoutesReact.js                        # Конфигурация роутинга
+│       └── webpack                               # Webpack-конфигурация для auth-модуля
+├── config                                        # Конфигурация приложения
+│   ├── app.py                                    # Основные настройки (DEBUG, ENV)
+│   ├── auth.py                                   # JWT/OAuth настройки
+│   ├── cache.py                                  # Redis/Memcached
+│   ├── celery.py                                 # Celery (фоновые задачи)
+│   ├── database.py                               # Настройки базы данных
+│   ├── logging.py                                # Конфигурация логирования
+│   ├── mail.py                                   # Почтовый сервис (SMTP)
+│   ├── route.py                                  # Конфигурация роутинга
+│   ├── security.py                               # CSP, CORS, HTTPS
+│   ├── services.py                               # Внешние API/S3/SMTP
+│   └── templates.py                              # Пути к шаблонам
+├── craft.py                                      # Консольный менеджер приложения
+├── database                                      # Работа с базой данных
+│   ├── factories                                 # Фабрики для тестовых данных
+│   ├── migrations                                # Миграции базы данных
+│   │   ├── env.py                                # Конфигурация окружения миграций
+│   │   └── versions                              # Версии миграций
+│   └── seeders                                   # Наполнители базы данных
+│       ├── database_seeder.py                    # Основной наполнитель базы данных
+├── static                                        # Статические файлы
+│   ├── css                                       # CSS стили
+│   │   ├── styleauth.css                         # Стили для аутентификации
+│   │   └── styles.css                            # Основные стили приложения
+│   ├── dist                                      # Собранные файлы фронтенда
+│   │   └── auth.js                               # Скомпилированный JavaScript для аутентификации
+│   ├── favicon.ico                               # Иконка сайта
+│   ├── fonts                                     # Шрифты
+│   │   ├── Manrope                               # Шрифт Manrope
+│   │   ├── Manrope-VariableFont_wght.ttf         # Переменный шрифт Manrope
+│   │   └── Roboto                                # Шрифт Roboto
+│   ├── img                                       # Изображения
+│   │   ├── gallery                               # Галерея изображений
+│   │   │   ├── 1.png                             # Изображение галереи
+│   │   ├── title-icon.png                        # Иконка заголовка
+│   │   └── to-top.png                            # Иконка "наверх"
+│   └── libs                                      # Сторонние библиотеки
+│       └── bootstrap                             # Фреймворк Bootstrap
+│           ├── css                               # CSS файлы Bootstrap
+│           └── js                                # JavaScript файлы Bootstrap
+├── storage                                       # Файловое хранилище
+│   ├── framework                                 # Фреймворк-хранилище
+│   └── logs                                      # Логи приложения
+│       └── app.log                               # Основной файл логов
+├── tests                                         # Тесты приложения
+│   └── utils                                     # Утилиты для тестирования
+│       └── test_mail.py                          # Тестирование email-сервиса
+├── alembic.ini                                   # Конфигурация Alembic для миграций
+├── docker-compose.yml                            # Docker Compose конфигурация
+├── Dockerfile                                    # Docker конфигурация
+├── LICENSE                                       # Лицензия проекта
+├── package.json                                  # NPM-зависимости
+├── package-lock.json                             # Лок-файл npm
+├── REACT.md                                      # Документация по React
+├── README.md                                     # Основная документация
+├── requirements.txt                              # Python-зависимости
+├── run.py                                        # Скрипт запуска приложения
+└── webpack.config.js                             # Конфигурация Webpack
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <section class="information" id="openmap">
+        <div class="container">
+            <div class="text-center">
+                <div class="divider"></div>
+                <h1 class="mb-3">КОНТАКТЫ</h1>
+                <p class="mb-5">Свяжитесь с нами для получения дополнительной информации</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <h2 class="mb-4">Наши контакты</h2>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><strong>Email:</strong> contact@titancoreframework.com</li>
+                        <li class="mb-3"><strong>Телефон:</strong> +7 (XXX) XXX-XX-XX</li>
+                        <li class="mb-3"><strong>Адрес:</strong> г. Москва, ул. Примерная, 123</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <h2 class="mb-4">Мы на карте</h2>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2245.3737891357374!2d37.61763331593095!3d55.75163398055302!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b54a5a738fa419%3A0x7c347d506f52311f!2z0JrRgNCw0YHQvdCw0Y8g0J_RgNC10YHQvdC40LbQsNGA0LjRjw!5e0!3m2!1sru!2sru!4v1620000000000!5m2!1sru!2sru" 
+                                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+        <img src="" id="modalImage" class="img-fluid" alt="Gallery Image">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryModal = document.getElementById('galleryModal');
+    const modalImage = document.getElementById('modalImage');
+    
+    galleryModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const imageUrl = button.getAttribute('data-image');
+        modalImage.src = imageUrl;
+    });
+});
+</script>
+    <footer>
+        <div class="container">
+            <div class="text-center">
+                <p>© 2025 TitanCore Framework. Все права защищены</p>
+            </div>
+        </div>
+    </footer>
+ <a href="#" class="scrollup"><i class="icon-up-open"></i></a>      
+{% endblock %}
+
+

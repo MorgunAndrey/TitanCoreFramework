@@ -1,0 +1,189 @@
+<!-- resources/views/main/index.html -->
+{% extends "layouts/head.html" %}
+
+{% block title %}Главная страница маркетплейсов{% endblock %}
+
+{% block content %}
+<style>
+    #circles-top {
+        color: #013B8D;
+        line-height: 1.42857143;
+        text-align: center;
+        font-family: Open Sans;
+        font-size: 50px;
+        margin-top: 30px;
+    }
+    
+    #wrapper {
+        margin-top: 100px;
+        width: 100%;
+        height: 70vh;
+        min-height: 500px;
+        overflow: hidden;
+        font-family: 'Officina Sans', Arial, Helvetica;
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    #canvas {
+        margin: 0 auto;
+        display: block;
+        background-color: transparent;
+    }
+    
+    .circle-info {
+        position: absolute;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 250px;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .circle-info h3 {
+        margin-top: 0;
+        color: #013B8D;
+        font-size: 18px;
+    }
+    
+    .circle-info p {
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+    
+    .welcome-text {
+        color: white;
+        margin-right: 15px;
+        font-weight: 500;
+    }
+</style>
+
+ <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">TitanCore Framework</a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+       
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+               
+            </ul>
+            <ul class="navbar-nav">
+                 <li class="nav-link">Здравствуйте, {{ user_name }}!</li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Выйти</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div id="wrapper">
+    <canvas id="canvas"></canvas>
+    <div id="circle-info" class="circle-info"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var getSizes = {
+            cw: function() {
+                return window.innerWidth < 1024 ? 1024 : (window.innerWidth > 1500 ? 1500 : window.innerWidth);
+            },
+            ch: function() { 
+                return window.innerHeight < 700 ? 700 : (window.innerHeight > 768 ? 768 : window.innerHeight);
+            },
+            rad: function() { 
+                return (getSizes.ch() < getSizes.cw()/1.8) ? getSizes.ch() / 12 : getSizes.cw() / 18; 
+            }
+        };
+
+        function circDataRecalc() {
+            var CW = getSizes.cw();
+            var CH = getSizes.ch();
+            var DEFRAD = getSizes.rad();
+            
+            xmod = 25;
+            ymod = 30;
+            
+            var CircleData = [
+                [CW/2 + xmod - DEFRAD * 1.2, CH/2 + ymod - DEFRAD * 1.2, DEFRAD * 1.0, 'rgba(75,100,174,0.8)', 'FastAPI'], 
+                [CW/2 + xmod + DEFRAD * 2.5, CH/2 + ymod - DEFRAD * 0.7, DEFRAD * 0.8, 'rgba(9,56,9,0.8)', 'Nodejs'],
+                [CW/2 + xmod + DEFRAD * 4.2, CH/2 + ymod - DEFRAD * 3.5, DEFRAD * 0.7, 'rgba(120,120,120,0.8)', 'МVC'],
+                [CW/2 + xmod - DEFRAD * 0.6, CH/2 + ymod - DEFRAD * 4.9, DEFRAD * 0.7, 'rgba(143,212,0,0.9)', 'Venv'],
+                [CW/2 + xmod + DEFRAD * 1.9, CH/2 + ymod - DEFRAD * 4.4, DEFRAD * 0.7, 'rgba(190,50,50,0.8)', 'Csrf'],
+                [CW/2 + xmod - DEFRAD * 3.2, CH/2 + ymod - DEFRAD * 4.3, DEFRAD * 0.7, 'rgba(110,0,0,0.8)', 'ORM'],
+                [CW/2 + xmod + DEFRAD * 5.8, CH/2 + ymod + DEFRAD * 0.3, DEFRAD * 1.0, 'rgba(50,50,190,0.8)', "React"],
+                [CW/2 + xmod - DEFRAD * 6.0, CH/2 + ymod - DEFRAD * 0.2, DEFRAD * 1.1, 'rgba(56,107,113,0.8)', "Python"], 
+                [CW/2 + xmod + DEFRAD * 6.8, CH/2 + ymod - DEFRAD * 3.2, DEFRAD * 0.7, 'rgba(100,200,200,0.8)', 'Routing']
+            ];
+
+            return CircleData;
+        }
+
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var circles = [];
+        
+        function resizeCanvas() {
+            canvas.width = getSizes.cw();
+            canvas.height = getSizes.ch();
+            circles = circDataRecalc();
+            drawCircles();
+        }
+        
+    
+        function drawCircles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (var i = 0; i < circles.length; i++) {
+                var circle = circles[i];
+                
+               
+                ctx.beginPath();
+                ctx.arc(circle[0], circle[1], circle[2], 0, Math.PI * 2, false);
+                ctx.fillStyle = circle[3];
+                ctx.fill();
+                
+                
+                ctx.font = 'bold ' + (circle[2] / 3) + 'px Arial';
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+            
+                var text = circle[4];
+                var lines = text.split('<br>');
+                var lineHeight = circle[2] / 3 + 2;
+                
+                for (var j = 0; j < lines.length; j++) {
+                    ctx.fillText(lines[j], circle[0], circle[1] - (lines.length - 1) * lineHeight / 2 + j * lineHeight);
+                }
+            }
+        }
+       
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            drawCircles();
+            
+            var time = new Date().getTime() * 0.0005;
+            for (var i = 0; i < circles.length; i++) {
+                circles[i][0] += Math.sin(time + i) * 0.1;
+                circles[i][1] += Math.cos(time + i) * 0.1;
+            }
+        }
+        
+        animate();
+    });
+</script>
+{% endblock %}

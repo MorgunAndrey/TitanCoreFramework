@@ -1,0 +1,24 @@
+<!-- resources/views/layouts/headauth.html  -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}FastAPI Marketplace{% endblock %}</title>
+    
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='favicon.ico') }}">
+
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <link rel="stylesheet" href="/static/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styleauth.css">   
+
+    
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
