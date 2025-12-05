@@ -12,6 +12,7 @@ from app.Services.EmailService import EmailService
 import hashlib
 import re
 from datetime import datetime
+from app.Services.AuthService import AuthService
 
 class RegisterController():
     
@@ -85,9 +86,7 @@ class RegisterController():
                 )
             if not user:
 
-                combined = f"{email}{password}"
-                sha1_hash = hashlib.sha1(combined.encode('utf-8')).hexdigest()
-                password_hash = hashlib.md5(sha1_hash.encode('utf-8')).hexdigest()
+                password_hash = AuthService.get_password_hash(password)
                 
                 new_user = User(
                     name=name,

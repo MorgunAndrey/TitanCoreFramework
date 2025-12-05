@@ -13,6 +13,7 @@ from app.Services.RequestParser import RequestParser
 from email_validator import validate_email, EmailNotValidError
 import re
 from app.Services.CsrfService import CsrfService
+from app.Services.AuthService import AuthService
 
 async def bytes_to_async_generator(data: bytes) -> AsyncGenerator[bytes, None]:
     yield data
@@ -74,14 +75,13 @@ class LoginController:
                     status_code=400
                 )
 
-            combined = f"{email}{password}"
-            sha1_hash = hashlib.sha1(combined.encode('utf-8')).hexdigest()
-            password_hash = hashlib.md5(sha1_hash.encode('utf-8')).hexdigest()
+            password_hash = AuthService.get_password_hash(password)
             
             user = db.query(User).filter_by(
                 email=email,
-                password=password_hash
             ).first()
+
+            user_verify = AuthService.verify_password(password, user.password)
             
             if not user:
                 return JSONResponse(

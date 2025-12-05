@@ -5,6 +5,7 @@ from app.Models.UsersPasswordHistory import UsersPasswordHistory  # Импорт
 from config.database import SessionLocal
 import hashlib
 from datetime import datetime
+from app.Services.AuthService import AuthService
 
 def seed():
     db: Session = SessionLocal()
@@ -15,9 +16,7 @@ def seed():
         existing = db.query(User).filter_by(email=email).first()
         
         if not existing:
-            combined = f"{email}{password}"
-            sha1_hash = hashlib.sha1(combined.encode('utf-8')).hexdigest()
-            password_hash = hashlib.md5(sha1_hash.encode('utf-8')).hexdigest()
+            password_hash = AuthService.get_password_hash(password)
             
             # Создаем пользователя
             test_user = User(
