@@ -5,6 +5,7 @@ from starlette.middleware.sessions import SessionMiddleware
 import logging.config
 import sys
 from pathlib import Path
+import os
 
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -19,7 +20,7 @@ logging.config.dictConfig(LOGGING)
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key="super-secret-key", 
+    secret_key=os.getenv("SESSION_SECRET_KEY", "fallback-dev-key-only-for-dev"), 
     session_cookie="session",      
     max_age=60 * 60 * 24 * 7   
 )
