@@ -82,37 +82,36 @@ class RegisterController():
             if user:
                 return JSONResponse(
                     {"error": "Ошибка пользователя с указанным E-mail.", "csrf": CsrfService.set_token_to_session(request)},
-                    status_code=401
+                    status_code=409
                 )
-            if not user:
 
-                password_hash = AuthService.get_password_hash(password)
-                
-                new_user = User(
-                    name=name,
-                    email=email,
-                    password=password_hash,
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
-                
-                db.add(new_user)
-                db.commit()
-                db.refresh(new_user)
-                
-                from app.Models.UsersPasswordHistory import UsersPasswordHistory
-                password_history = UsersPasswordHistory(
-                    user_id=new_user.id,
-                    password=password_hash,
-                    created_at=datetime.utcnow(),
-                    updated_at=datetime.utcnow()
-                )
-                db.add(password_history)
-                db.commit()
-                
-                return JSONResponse(
-                        {"result": 1},
-                        status_code=200
+            password_hash = AuthService.get_password_hash(password)
+            
+            new_user = User(
+                name=name,
+                email=email,
+                password=password_hash,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            
+            db.add(new_user)
+            db.commit()
+            db.refresh(new_user)
+            
+            from app.Models.UsersPasswordHistory import UsersPasswordHistory
+            password_history = UsersPasswordHistory(
+                user_id=new_user.id,
+                password=password_hash,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.add(password_history)
+            db.commit()
+            
+            return JSONResponse(
+                {"result": 1},
+                status_code=200
             )  
 
                         
