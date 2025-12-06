@@ -15,9 +15,6 @@ import re
 from app.Services.CsrfService import CsrfService
 from app.Services.AuthService import AuthService
 
-async def bytes_to_async_generator(data: bytes) -> AsyncGenerator[bytes, None]:
-    yield data
-
 class LoginController:
     
     @staticmethod
