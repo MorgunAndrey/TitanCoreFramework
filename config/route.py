@@ -7,15 +7,15 @@ from app.Controllers.Auth.LoginController import LoginController
 from app.Controllers.Auth.RegisterController import RegisterController
 from app.Controllers.Auth.ResetPasswordController import ResetPasswordController
 from app.Controllers.Auth.ForgotPasswordController import ForgotPasswordController
-from app.Middleware.auth import auth_required
-from app.Middleware.not_auth import not_auth_required
+from app.Middleware.auth import auth_redirect
+from app.Middleware.not_auth import not_auth_redirect
 from app.Controllers.Test.TestController import TestController
 
 router = APIRouter()
 
 
 # Маршруты (перенаправляем авторизованных на /main)
-auth_router = APIRouter(dependencies=[Depends(auth_required)])
+auth_router = APIRouter(dependencies=[Depends(auth_redirect)])
 
 auth_router.get("/test", tags=["view"])(TestController.index) 
 auth_router.get("/", tags=["view"])(HomeController.index)
@@ -30,7 +30,7 @@ auth_router.post("/password/email")(ForgotPasswordController.passwordEmail)
 auth_router.post("/password/change")(ResetPasswordController.passwordСhange)
 
 # Маршруты (перенаправляем не авторизованных на /)
-not_auth_router = APIRouter(dependencies=[Depends(not_auth_required)])
+not_auth_router = APIRouter(dependencies=[Depends(not_auth_redirect)])
 
 not_auth_router.get("/main", tags=["view"])(MainController.main)
 not_auth_router.get("/logout")(LoginController.logout)
