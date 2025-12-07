@@ -8,7 +8,7 @@ import os
 
 load_dotenv()
 
-DATABASE_URL = f"mysql+pymysql://{os.getenv('databaseUser')}:{os.getenv('databasePassword')}@{os.getenv('databaseHost')}:{os.getenv('databasePort')}/{os.getenv('databaseName')}"
+DATABASE_URL = f"mysql+pymysql://{os.getenv('database_user')}:{os.getenv('database_password')}@{os.getenv('database_host')}:{os.getenv('database_port')}/{os.getenv('database_name')}"
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
