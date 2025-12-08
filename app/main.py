@@ -22,13 +22,16 @@ app = FastAPI(title=settings.appBaseName)
 
 logging.config.dictConfig(LOGGING)
 
+# https_only только в production для работы в development без HTTPS
+https_only = settings.environment == "production"
+
 app.add_middleware(
     SessionMiddleware,
     secret_key = session_secret,
     session_cookie="session",      
     max_age=60 * 60 * 24 * 7,
     same_site="lax",
-    https_only=True
+    https_only=https_only
 )
 
 app.include_router(route.router)

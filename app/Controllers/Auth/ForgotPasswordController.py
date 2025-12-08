@@ -11,7 +11,10 @@ from app.Models.UsersPasswordResetToken import UsersPasswordResetToken
 from email_validator import validate_email, EmailNotValidError
 from app.Services.EmailService import EmailService
 import hashlib
+import logging
 from app.Services.RateLimitService import RateLimitService
+
+logger = logging.getLogger(__name__)
 
 class ForgotPasswordController():
     @staticmethod
@@ -61,11 +64,8 @@ class ForgotPasswordController():
                 email=email
             ).first()
             
-            if not user:
-                return JSONResponse(
-                    {"error": "Не удалось найти пользователя с указанным E-mail.", "csrf": CsrfService.set_token_to_session(request)},
-                    status_code=401
-                )
+            # Защита от перечисления пользователей - всегда возвращаем одинаковый ответ
+            # Отправляем email только если пользователь существует
             if user:
                 mail_token = CsrfService.generate_token()
                 mail_token_hash = hashlib.sha256(mail_token.encode()).hexdigest()
@@ -83,14 +83,16 @@ class ForgotPasswordController():
                 db.add(reset_token)
                 db.commit()
             
-                if email_sent:
-                    return JSONResponse(
-                        {"result": 1},
-                        status_code=200
-            )    
+            # Всегда возвращаем одинаковый ответ для защиты от перечисления пользователей
+            return JSONResponse(
+                {"result": 1},
+                status_code=200
+            )
                        
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Forgot password error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )          

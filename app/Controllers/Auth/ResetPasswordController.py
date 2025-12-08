@@ -15,7 +15,10 @@ from app.Services.AuthService import AuthService
 from app.Services.RateLimitService import RateLimitService
 import hashlib
 import re
+import logging
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 class ResetPasswordController():
     
@@ -187,8 +190,10 @@ class ResetPasswordController():
 
                         
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Password reset error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )
 

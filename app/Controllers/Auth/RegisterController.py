@@ -10,8 +10,11 @@ from email_validator import validate_email, EmailNotValidError
 from app.Services.CsrfService import CsrfService
 from app.Services.EmailService import EmailService
 import re
+import logging
 from datetime import datetime
 from app.Services.AuthService import AuthService
+
+logger = logging.getLogger(__name__)
 
 class RegisterController():
     
@@ -47,6 +50,21 @@ class RegisterController():
                     status_code=400
                 )
 
+            # Валидация имени на сервере
+            name = name.strip()
+            if len(name) < 2 or len(name) > 255:
+                return JSONResponse(
+                    {"error": "Имя должно содержать от 2 до 255 символов", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=400
+                )
+            
+            name_pattern = re.compile(r"^[a-zA-Zа-яА-ЯёЁ\s\-]+$")
+            if not name_pattern.match(name):
+                return JSONResponse(
+                    {"error": "Имя содержит недопустимые символы", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=400
+                )
+
             if not email:
                 return JSONResponse(
                     {"error": "Пожалуйста, введите email", "csrf": CsrfService.set_token_to_session(request)},
@@ -66,10 +84,8 @@ class RegisterController():
                     {"error": "Пожалуйста, введите корректный email", "csrf": CsrfService.set_token_to_session(request)},
                     status_code=400
                 )
-            user = db.query(User).filter_by(
-                email=email
-            ).first()
-
+            
+            # Валидация пароля ПЕРЕД проверкой существования пользователя (защита от timing attack)
             password_pattern = re.compile(r"(?=^.{10,72}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[^\w\s]).*")
             if not password_pattern.fullmatch(password):
                 return JSONResponse(
@@ -84,6 +100,11 @@ class RegisterController():
                     status_code=400
                 )
             
+            # Проверка существования пользователя после валидации
+            user = db.query(User).filter_by(
+                email=email
+            ).first()
+            
             if user:
                 return JSONResponse(
                     {"error": "Ошибка пользователя с указанным E-mail.", "csrf": CsrfService.set_token_to_session(request)},
@@ -92,36 +113,42 @@ class RegisterController():
 
             password_hash = AuthService.get_password_hash(password)
             
-            new_user = User(
-                name=name,
-                email=email,
-                password=password_hash,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            
-            db.add(new_user)
-            db.commit()
-            db.refresh(new_user)
-            
-            from app.Models.UsersPasswordHistory import UsersPasswordHistory
-            password_history = UsersPasswordHistory(
-                user_id=new_user.id,
-                password=password_hash,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.add(password_history)
-            db.commit()
-            
-            return JSONResponse(
-                {"result": 1, "csrf": CsrfService.set_token_to_session(request)},
-                status_code=200
-            )  
+            # Использование транзакции для согласованности данных
+            try:
+                new_user = User(
+                    name=name,
+                    email=email,
+                    password=password_hash,
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                
+                db.add(new_user)
+                db.flush()  # Получаем ID без commit
+                
+                from app.Models.UsersPasswordHistory import UsersPasswordHistory
+                password_history = UsersPasswordHistory(
+                    user_id=new_user.id,
+                    password=password_hash,
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                db.add(password_history)
+                db.commit()  # Один commit для обеих операций
+                
+                return JSONResponse(
+                    {"result": 1, "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=200
+                )
+            except Exception as e:
+                db.rollback()
+                raise
 
                         
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Registration error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )          
