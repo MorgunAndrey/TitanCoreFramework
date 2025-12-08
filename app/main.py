@@ -14,13 +14,17 @@ from config import route
 from config.app import settings
 from config.logging import LOGGING
 
+session_secret = os.getenv("SESSION_SECRET_KEY")
+if not session_secret or len(session_secret) < 32:
+    raise RuntimeError("SESSION_SECRET_KEY must be set and at least 32 characters long")
+
 app = FastAPI(title=settings.appBaseName)
 
 logging.config.dictConfig(LOGGING)
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key = os.getenv("SESSION_SECRET_KEY"),
+    secret_key = session_secret,
     session_cookie="session",      
     max_age=60 * 60 * 24 * 7,
     same_site="lax",

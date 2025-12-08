@@ -13,6 +13,7 @@ from email_validator import validate_email, EmailNotValidError
 import re
 from app.Services.CsrfService import CsrfService
 from app.Services.AuthService import AuthService
+from app.Services.RateLimitService import RateLimitService
 
 class LoginController:
     
@@ -35,6 +36,14 @@ class LoginController:
             csrf_token = request_data.get("csrf_token")
             email = request_data.get("login")
             password = request_data.get("password")
+
+            client_ip = request.client.host if request.client else "unknown"
+            rate_key = f"login:{client_ip}"
+            if not RateLimitService.check_and_increment(rate_key, limit=5, window_seconds=300):
+                return JSONResponse(
+                    {"error": "Слишком много попыток, попробуйте позже", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=429
+                )
 
             if not CsrfService.validate_token(request, csrf_token):
                 return JSONResponse(
@@ -63,15 +72,15 @@ class LoginController:
                     status_code=400
                 )
             
-            password_pattern = re.compile(r"((?=^.{7,72}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9]*)")
+            password_pattern = re.compile(r"(?=^.{10,72}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[^\w\s]).*")
             if not password_pattern.fullmatch(password):
                 return JSONResponse(
                     {
                         "error": "Пароль должен содержать:\n"
-                        "- Не менее 7 символов\n"
+                        "- Не менее 10 символов\n"
                         "- Минимум 1 заглавную букву\n"
                         "- Минимум 1 цифру\n"
-                        "- Только латинские буквы и цифры",
+                        "- Минимум 1 спецсимвол",
                         "csrf": CsrfService.set_token_to_session(request)
                     },
                     status_code=400

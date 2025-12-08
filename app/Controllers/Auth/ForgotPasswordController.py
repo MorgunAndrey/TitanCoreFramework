@@ -11,6 +11,7 @@ from app.Models.UsersPasswordResetToken import UsersPasswordResetToken
 from email_validator import validate_email, EmailNotValidError
 from app.Services.EmailService import EmailService
 import hashlib
+from app.Services.RateLimitService import RateLimitService
 
 class ForgotPasswordController():
     @staticmethod
@@ -26,6 +27,14 @@ class ForgotPasswordController():
             request_data = await RequestParser.parse_request(request)
             csrf_token = request_data.get("csrf_token")
             email = request_data.get("email")
+
+            client_ip = request.client.host if request.client else "unknown"
+            rate_key = f"password_email:{client_ip}"
+            if not RateLimitService.check_and_increment(rate_key, limit=5, window_seconds=900):
+                return JSONResponse(
+                    {"error": "Слишком много попыток, попробуйте позже", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=429
+                )
 
             if not CsrfService.validate_token(request, csrf_token):
                 return JSONResponse(
