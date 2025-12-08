@@ -10,6 +10,7 @@ from app.Services.RequestParser import RequestParser
 from app.Models.UsersPasswordResetToken import UsersPasswordResetToken
 from email_validator import validate_email, EmailNotValidError
 from app.Services.EmailService import EmailService
+import hashlib
 
 class ForgotPasswordController():
     @staticmethod
@@ -25,6 +26,12 @@ class ForgotPasswordController():
             request_data = await RequestParser.parse_request(request)
             csrf_token = request_data.get("csrf_token")
             email = request_data.get("email")
+
+            if not CsrfService.validate_token(request, csrf_token):
+                return JSONResponse(
+                    {"error": "Некорректный CSRF-токен", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=400
+                )
 
             if not email:
                 return JSONResponse(
@@ -51,7 +58,8 @@ class ForgotPasswordController():
                     status_code=401
                 )
             if user:
-                mail_token = CsrfService.set_token_to_session(request)
+                mail_token = CsrfService.generate_token()
+                mail_token_hash = hashlib.sha256(mail_token.encode()).hexdigest()
                 email_sent = EmailService.send_password_reset_email(email, mail_token)
                 
                 db.query(UsersPasswordResetToken).filter(
@@ -60,7 +68,7 @@ class ForgotPasswordController():
                 
                 reset_token = UsersPasswordResetToken(
                     email=email,
-                    token=mail_token
+                    token=mail_token_hash
                 )
                 
                 db.add(reset_token)

@@ -83,17 +83,12 @@ class LoginController:
                 email=email,
             ).first()
 
-            if not user:
-                return JSONResponse(
-                    {"error": "Неверный логин", "csrf": CsrfService.set_token_to_session(request)},
-                    status_code=401
-                )
-
-            user_verify = AuthService.verify_password(password, user.password)
+            user_verify = user and AuthService.verify_password(password, user.password)
             
             if not user_verify:
+                # Единое сообщение, чтобы не раскрывать наличие пользователя
                 return JSONResponse(
-                    {"error": "Неверный пароль", "csrf": CsrfService.set_token_to_session(request)},
+                    {"error": "Неверные учетные данные", "csrf": CsrfService.set_token_to_session(request)},
                     status_code=401
                 )
             

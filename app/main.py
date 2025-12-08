@@ -22,7 +22,9 @@ app.add_middleware(
     SessionMiddleware,
     secret_key = os.getenv("SESSION_SECRET_KEY"),
     session_cookie="session",      
-    max_age=60 * 60 * 24 * 7   
+    max_age=60 * 60 * 24 * 7,
+    same_site="lax",
+    https_only=True
 )
 
 app.include_router(route.router)

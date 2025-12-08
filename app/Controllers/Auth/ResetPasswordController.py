@@ -24,8 +24,9 @@ class ResetPasswordController():
             if not token:
                 raise HTTPException(status_code=302, headers={"Location": "/"})
 
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
             reset_token = db.query(UsersPasswordResetToken).filter(
-                UsersPasswordResetToken.token == token
+                UsersPasswordResetToken.token == token_hash
             ).first()
 
             if not reset_token:
@@ -51,6 +52,12 @@ class ResetPasswordController():
             email = request_data.get("email")
             password = request_data.get("password")
             
+            if not token:
+                return JSONResponse(
+                    {"error": "Отсутствует токен сброса", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=400
+                )
+
             if not CsrfService.validate_token(request, csrf_token):
                 return JSONResponse(
                     {"error": "Некорректный CSRF-токен", "csrf": CsrfService.set_token_to_session(request)},
@@ -74,6 +81,27 @@ class ResetPasswordController():
             except EmailNotValidError as e:
                 return JSONResponse(
                     {"error": "Пожалуйста, введите корректный email", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=400
+                )
+            
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
+            reset_token = db.query(UsersPasswordResetToken).filter(
+                UsersPasswordResetToken.token == token_hash
+            ).first()
+            
+            if not reset_token or reset_token.email != email:
+                return JSONResponse(
+                    {"error": "Некорректный или устаревший токен сброса", "csrf": CsrfService.set_token_to_session(request)},
+                    status_code=401
+                )
+            
+            if reset_token.is_expired():
+                db.query(UsersPasswordResetToken).filter(
+                    UsersPasswordResetToken.token == token_hash
+                ).delete()
+                db.commit()
+                return JSONResponse(
+                    {"error": "Срок действия токена истек", "csrf": CsrfService.set_token_to_session(request)},
                     status_code=400
                 )
             
@@ -103,12 +131,21 @@ class ResetPasswordController():
             
             password_hash = AuthService.get_password_hash(password)
             
-            old_password = db.query(UsersPasswordHistory).filter(
-                UsersPasswordHistory.user_id == user.id,
-                UsersPasswordHistory.password == password_hash
-            ).first()
-            
-            if old_password:
+            # Проверяем, использовался ли пароль ранее
+            password_reused = False
+            password_history_entries = db.query(UsersPasswordHistory).filter(
+                UsersPasswordHistory.user_id == user.id
+            ).all()
+
+            if AuthService.verify_password(password, user.password):
+                password_reused = True
+            else:
+                for history_record in password_history_entries:
+                    if AuthService.verify_password(password, history_record.password):
+                        password_reused = True
+                        break
+
+            if password_reused:
                 return JSONResponse(
                     {"error": "Нельзя использовать старый пароль. Придумайте новый пароль.", "csrf": CsrfService.set_token_to_session(request)},
                     status_code=400
