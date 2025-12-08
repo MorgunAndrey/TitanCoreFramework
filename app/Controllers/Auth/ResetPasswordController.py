@@ -22,17 +22,17 @@ class ResetPasswordController():
     async def resetPassword(cls, request: Request, token: str, db: Session = Depends(get_db)):
         try:
             if not token:
-                raise HTTPException(status_code=302, headers={"Location": "https://ya.ru/"})
+                raise HTTPException(status_code=302, headers={"Location": "/"})
 
             reset_token = db.query(UsersPasswordResetToken).filter(
                 UsersPasswordResetToken.token == token
             ).first()
 
             if not reset_token:
-                raise HTTPException(status_code=302, headers={"Location": "https://ya.ru/"})
+                raise HTTPException(status_code=302, headers={"Location": "/"})
                     
             if reset_token.is_expired():
-                raise HTTPException(status_code=302, headers={"Location": "https://ya.ru/"})
+                raise HTTPException(status_code=302, headers={"Location": "/"})
 
             csrf_token = CsrfService.set_token_to_session(request)
             return templates.TemplateResponse("auth/auth.html", {
@@ -40,7 +40,7 @@ class ResetPasswordController():
                 "csrf_token": csrf_token
             })
         except Exception as e:
-            raise HTTPException(status_code=302, headers={"Location": "https://ya.ru/"})
+            raise HTTPException(status_code=302, headers={"Location": "/"})
     
     @staticmethod
     async def passwordСhange(request: Request, db: Session = Depends(get_db)):
