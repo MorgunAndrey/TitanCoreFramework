@@ -87,7 +87,7 @@ class ResetPasswordController():
                     status_code=401
                 )
             
-            password_pattern = re.compile(r"((?=^.{7,}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9]*)")
+            password_pattern = re.compile(r"((?=^.{7,72}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])[a-zA-Z0-9]*)")
             if not password_pattern.fullmatch(password):
                 return JSONResponse(
                     {
