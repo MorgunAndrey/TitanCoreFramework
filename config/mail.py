@@ -25,17 +25,17 @@ def get_env_bool(key: str, default: bool = False) -> bool:
     return value.lower() in ('true', '1', 'yes', 'y', 't')
 
 # Настройки SMTP с гарантированными типами
-mailHost = get_env_str("mailHost", "smtp.mail.ru")
-mailPort = get_env_int("mailPort", 465)
-mailUsername = get_env_str("mailUsername", "")
-mailPassword = get_env_str("mailPassword", "")
-mailEncryption = get_env_str("mailEncryption", "ssl")
-mailFromAddress = get_env_str("mailFromAddress", "")
-mailFromName = get_env_str("mailFromName", get_env_str("mailFromName", "TitanCore Framework"))
+mailHost = get_env_str("mail_host", "smtp.mail.ru")
+mailPort = get_env_int("mail_port", 465)
+mailUsername = get_env_str("mail_username", "")
+mailPassword = get_env_str("mail_password", "")
+mailEncryption = get_env_str("mail_encryption", "ssl")
+mailFromAddress = get_env_str("mail_from_address", "")
+mailFromName = get_env_str("mail_from_name", get_env_str("mail_from_name", "TitanCore Framework"))
 
 # URL приложения
-appBaseUrl = get_env_str("appBaseUrl", "http://localhost:8000")
-appBaseName = get_env_str("appBaseName", "TitanCore Framework")
+appBaseUrl = get_env_str("app_base_url", "http://localhost:8000")
+appBaseName = get_env_str("app_base_name", "TitanCore Framework")
 
 
 

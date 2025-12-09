@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     app_base_name: str = "TitanCore"
     debug: bool = False
-    environment: str = "production"
+    environment: str = "development"
     timezone: str = "UTC"
     
     app_base_url: str = "http://localhost:8000"

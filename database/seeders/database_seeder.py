@@ -12,7 +12,7 @@ def seed():
 
     try:
         email = 'admin@gmail.com'
-        password = 'Admin123'
+        password = 'Admin12345'
         existing = db.query(User).filter_by(email=email).first()
         
         if not existing:

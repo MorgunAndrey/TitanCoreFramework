@@ -1,1 +1,40 @@
-
+WARNING 2025-12-09 13:06:03,895 bcrypt (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+ERROR 2025-12-09 13:06:03,904 LoginController Login error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+Traceback (most recent call last):
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\app\Controllers\Auth\LoginController.py", line 98, in authLogin
+    user_verify = user and AuthService.verify_password(password, user.password)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\app\Services\AuthService.py", line 12, in verify_password
+    return pwd_context.verify(plain_password, hashed_password)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\context.py", line 2347, in verify
+    return record.verify(secret, hash, **kwds)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 792, in verify
+    return consteq(self._calc_checksum(secret), chk)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 591, in _calc_checksum
+    self._stub_requires_backend()
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2254, in _stub_requires_backend
+    cls.set_backend()
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2156, in set_backend
+    return owner.set_backend(name, dryrun=dryrun)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2163, in set_backend
+    return cls.set_backend(name, dryrun=dryrun)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2188, in set_backend
+    cls._set_backend(name, dryrun)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2311, in _set_backend
+    super(SubclassBackendMixin, cls)._set_backend(name, dryrun)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 2224, in _set_backend
+    ok = loader(**kwds)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 626, in _load_backend_mixin
+    return mixin_cls._finalize_backend_mixin(name, dryrun)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 421, in _finalize_backend_mixin
+    if detect_wrap_bug(IDENT_2A):
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 380, in detect_wrap_bug
+    if verify(secret, bug_hash):
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\utils\handlers.py", line 792, in verify
+    return consteq(self._calc_checksum(secret), chk)
+  File "C:\Users\serg1\Documents\serg1\работа смарттайм\python\titancore_github\TitanCoreFramework\venv\lib\site-packages\passlib\handlers\bcrypt.py", line 655, in _calc_checksum
+    hash = _bcrypt.hashpw(secret, config)
+ValueError: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])

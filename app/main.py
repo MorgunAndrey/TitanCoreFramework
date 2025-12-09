@@ -18,7 +18,7 @@ session_secret = os.getenv("SESSION_SECRET_KEY")
 if not session_secret or len(session_secret) < 32:
     raise RuntimeError("SESSION_SECRET_KEY must be set and at least 32 characters long")
 
-app = FastAPI(title=settings.appBaseName)
+app = FastAPI(title=settings.app_base_name)
 
 logging.config.dictConfig(LOGGING)
 
