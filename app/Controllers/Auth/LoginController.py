@@ -11,9 +11,12 @@ from typing import AsyncGenerator
 from app.Services.RequestParser import RequestParser
 from email_validator import validate_email, EmailNotValidError
 import re
+import logging
 from app.Services.CsrfService import CsrfService
 from app.Services.AuthService import AuthService
 from app.Services.RateLimitService import RateLimitService
+
+logger = logging.getLogger(__name__)
 
 class LoginController:
     
@@ -86,7 +89,7 @@ class LoginController:
                     status_code=400
                 )
 
-            password_hash = AuthService.get_password_hash(password)
+            # Удалено лишнее хеширование пароля - проверка происходит через verify_password
             
             user = db.query(User).filter_by(
                 email=email,
@@ -113,8 +116,10 @@ class LoginController:
             )
             
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Login error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )
 

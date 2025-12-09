@@ -15,7 +15,10 @@ from app.Services.AuthService import AuthService
 from app.Services.RateLimitService import RateLimitService
 import hashlib
 import re
+import logging
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 class ResetPasswordController():
     
@@ -118,9 +121,10 @@ class ResetPasswordController():
                 email=email
             ).first()
             
+            # Защита от перечисления пользователей - используем общее сообщение
             if not user:
                 return JSONResponse(
-                    {"error": "Не удалось найти пользователя с указанным E-mail.", "csrf": CsrfService.set_token_to_session(request)},
+                    {"error": "Некорректный или устаревший токен сброса", "csrf": CsrfService.set_token_to_session(request)},
                     status_code=401
                 )
             
@@ -160,35 +164,42 @@ class ResetPasswordController():
                     status_code=400
                 )
             
-            db.query(UsersPasswordResetToken).filter(
-                UsersPasswordResetToken.email == email
-            ).delete()
+            # Использование транзакции для согласованности данных
+            try:
+                db.query(UsersPasswordResetToken).filter(
+                    UsersPasswordResetToken.email == email
+                ).delete()
 
-            db.query(User).filter(
-                User.email == email
-            ).update(
-                {"password": password_hash}
-            )
-            
-            password_history = UsersPasswordHistory(
-                user_id=user.id,
-                password=password_hash,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.add(password_history)
-            
-            db.commit()
-            
-            return JSONResponse(
-                {"result": 1},
-                status_code=200
-            )  
+                db.query(User).filter(
+                    User.email == email
+                ).update(
+                    {"password": password_hash}
+                )
+                
+                password_history = UsersPasswordHistory(
+                    user_id=user.id,
+                    password=password_hash,
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow()
+                )
+                db.add(password_history)
+                
+                db.commit()
+                
+                return JSONResponse(
+                    {"result": 1},
+                    status_code=200
+                )
+            except Exception as e:
+                db.rollback()
+                raise  
 
                         
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Password reset error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )
 

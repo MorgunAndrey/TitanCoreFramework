@@ -20,6 +20,8 @@ class CsrfService:
     @staticmethod
     def validate_token(request: Request, token: str) -> bool:
         """Валидация CSRF токена"""
+        if not token:
+            return False
         session_token = CsrfService.get_token_from_session(request)
         return session_token is not None and secrets.compare_digest(session_token, token)
 

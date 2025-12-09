@@ -11,7 +11,10 @@ from app.Models.UsersPasswordResetToken import UsersPasswordResetToken
 from email_validator import validate_email, EmailNotValidError
 from app.Services.EmailService import EmailService
 import hashlib
+import logging
 from app.Services.RateLimitService import RateLimitService
+
+logger = logging.getLogger(__name__)
 
 class ForgotPasswordController():
     @staticmethod
@@ -61,36 +64,48 @@ class ForgotPasswordController():
                 email=email
             ).first()
             
-            if not user:
-                return JSONResponse(
-                    {"error": "Не удалось найти пользователя с указанным E-mail.", "csrf": CsrfService.set_token_to_session(request)},
-                    status_code=401
-                )
+            # Защита от перечисления пользователей - всегда возвращаем одинаковый ответ
+            # Отправляем email только если пользователь существует
             if user:
                 mail_token = CsrfService.generate_token()
                 mail_token_hash = hashlib.sha256(mail_token.encode()).hexdigest()
                 email_sent = EmailService.send_password_reset_email(email, mail_token)
                 
-                db.query(UsersPasswordResetToken).filter(
-                    UsersPasswordResetToken.email == email
-                ).delete()
-                
-                reset_token = UsersPasswordResetToken(
-                    email=email,
-                    token=mail_token_hash
-                )
-                
-                db.add(reset_token)
-                db.commit()
-            
+                # Если email успешно отправлен, сохраняем токен в БД
                 if email_sent:
-                    return JSONResponse(
-                        {"result": 1},
-                        status_code=200
-            )    
+                    try:
+                        db.query(UsersPasswordResetToken).filter(
+                            UsersPasswordResetToken.email == email
+                        ).delete()
+                        
+                        reset_token = UsersPasswordResetToken(
+                            email=email,
+                            token=mail_token_hash
+                        )
+                        
+                        db.add(reset_token)
+                        db.commit()
+                    except Exception as e:
+                        db.rollback()
+                        logger.error(f"Failed to save password reset token for {email}: {e}", exc_info=True)
+                        # Логируем ошибку, но все равно возвращаем успех для защиты от перечисления
+                else:
+                    # Email не отправлен - логируем критическую ошибку для администратора
+                    logger.error(f"CRITICAL: Failed to send password reset email to {email}. Token was NOT saved.", exc_info=True)
+                    # Не сохраняем токен, так как email не был отправлен
+                    # Все равно возвращаем успех для защиты от перечисления пользователей
+            
+            # Всегда возвращаем одинаковый ответ для защиты от перечисления пользователей
+            # (даже если email не был отправлен - это логируется для администратора)
+            return JSONResponse(
+                {"result": 1},
+                status_code=200
+            )
                        
         except Exception as e:
+            # Логируем детали ошибки на сервере, но не раскрываем клиенту
+            logger.error(f"Forgot password error: {str(e)}", exc_info=True)
             return JSONResponse(
-                {"error": f"Ошибка сервера: {str(e)}", "csrf": CsrfService.generate_token()},
+                {"error": "Произошла ошибка при обработке запроса", "csrf": CsrfService.generate_token()},
                 status_code=500
             )          
