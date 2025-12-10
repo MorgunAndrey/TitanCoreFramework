@@ -1,6 +1,25 @@
-TitanCoreFramework: A FastAPI-based Python backend with layered architecture (Controllers/Views/Models). Features auth, CLI, DB abstraction, queues. Supports Node.js/React frontend. Perfect for robust REST APIs and web apps.
+Titan: A FastAPI-based Python backend with layered architecture (Controllers/Views/Models). 
 
-Warning: Before using in production, you must fix security and architecture problems. I don't have time for that yet.
+Features auth, CLI, DB abstraction, queues. Supports Node.js/React frontend. Perfect for robust REST APIs and web apps.
+
+Release 1.0.1
+
+Сomparison with Flask and Django
+
+Критерий               Django                Flask         Titan
+
+Производительность | ️ Медленнее         | ️ Медленнее |  FastAPI (быстрый) 
+
+Простота           | ️ Много "магии"     |  Простой   |  Простой 
+
+Асинхронность      | ️ Ограниченная      |  Нет       |  Полная поддержка 
+
+Размер             | ️ Большой           |  Легкий    |  Легкий 
+
+Гибкость           | ️ Много ограничений |  Гибкий    |  Очень гибкий 
+
+
+
 
 Key Features
 CLI Commands
@@ -17,7 +36,8 @@ Template Engine
 
 Service Layer
 
-titanCoreFramework/
+Titan/
+
  alembic.ini                    # Database migration configuration (Alembic)
 
  craft.py                       # CLI utility for project management
