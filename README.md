@@ -6,17 +6,17 @@ Release 1.0.1
 
 Сomparison with Flask and Django
 
-Критерий               Django                Flask         Titan
+Criterion               Django                Flask             Titan
 
-Производительность | ️ Медленнее         | ️ Медленнее |  FastAPI (быстрый) 
+Performance        | ️ Slower            | ️ Slower         |  FastAPI (Fast) 
 
-Простота           | ️ Много "магии"     |  Простой   |  Простой 
+Simplicity         | ️ Lots of "magic"   |  Simple         |  Simple 
 
-Асинхронность      | ️ Ограниченная      |  Нет       |  Полная поддержка 
+Asynchronous       | ️ Limited           |  No             |  Full support 
 
-Размер             | ️ Большой           |  Легкий    |  Легкий 
+Size               | ️ Large             |  Lightweight    |  Lightweight
 
-Гибкость           | ️ Много ограничений |  Гибкий    |  Очень гибкий 
+Flexibility        | ️ Many limitations  |  Flexible       |  Very flexible
 
 
 
