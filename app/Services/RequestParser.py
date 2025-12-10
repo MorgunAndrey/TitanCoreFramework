@@ -1,4 +1,4 @@
-from fastapi import Request, Form
+from fastapi import Request, Form, HTTPException
 from typing import Dict, Any
 import urllib.parse
 import json
@@ -36,12 +36,6 @@ class RequestParser:
                 return {}
             
         else:
-            try:
-                form_data = await request.form()
-                return dict(form_data)
-            except Exception as e:
-                try:
-                    return await request.json()
-                except Exception as json_error:
-                    logger.warning(f"Failed to parse request body: form={e}, json={json_error}")
-                    return {}
+            # Явно отклоняем неподдерживаемый content-type
+            logger.warning(f"Unsupported Content-Type: {content_type}")
+            raise HTTPException(status_code=415, detail="Unsupported Content-Type")

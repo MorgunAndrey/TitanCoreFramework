@@ -14,7 +14,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 from config import route
 from config.app import settings
 from config.logging import LOGGING
-from config.security import cors_options, SESSION_COOKIE_SAMESITE
+from config.security import cors_options, SESSION_COOKIE_SAMESITE, SESSION_COOKIE_SECURE
 
 session_secret = os.getenv("SESSION_SECRET_KEY")
 if not session_secret or len(session_secret) < 32:
@@ -24,8 +24,8 @@ app = FastAPI(title=settings.app_base_name)
 
 logging.config.dictConfig(LOGGING)
 
-# https_only только в production для работы в development без HTTPS
-https_only = settings.environment == "production"
+# https_only: включаем всегда в production или если явно задано SESSION_COOKIE_SECURE
+https_only = settings.environment == "production" or SESSION_COOKIE_SECURE
 
 app.add_middleware(
     SessionMiddleware,

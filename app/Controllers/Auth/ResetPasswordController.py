@@ -57,7 +57,7 @@ class ResetPasswordController():
             password = request_data.get("password")
 
             client_ip = request.client.host if request.client else "unknown"
-            rate_key = f"password_change:{client_ip}"
+            rate_key = f"password_change:{client_ip}:{email or 'unknown'}"
             if not RateLimitService.check_and_increment(rate_key, limit=5, window_seconds=900):
                 return JSONResponse(
                     {"error": "Слишком много попыток, попробуйте позже", "csrf": CsrfService.set_token_to_session(request)},

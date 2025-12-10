@@ -1,6 +1,7 @@
 # app/Services/EmailService.py
 import smtplib
 import ssl
+import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Optional
@@ -9,6 +10,9 @@ from config.mail import (
     mailEncryption, mailFromAddress, mailFromName,
     appBaseUrl, appBaseName
 )
+
+logger = logging.getLogger(__name__)
+
 
 class EmailService:
     
@@ -94,7 +98,7 @@ class EmailService:
             return True
             
         except Exception as e:
-            print(f"Ошибка отправки email: {e}")
+            logger.error(f"Ошибка отправки email: {e}", exc_info=True)
             return False
 
     @staticmethod
@@ -130,19 +134,19 @@ class EmailService:
                     return True
                     
         except ValueError as e:
-            print(f"Ошибка конфигурации: {e}")
+            logger.error(f"Ошибка конфигурации SMTP: {e}")
             return False
         except smtplib.SMTPAuthenticationError:
-            print("Ошибка аутентификации: неверный логин или пароль")
+            logger.error("Ошибка аутентификации: неверный логин или пароль")
             return False
         except smtplib.SMTPConnectError:
-            print("Ошибка подключения к SMTP серверу")
+            logger.error("Ошибка подключения к SMTP серверу")
             return False
         except smtplib.SMTPException as e:
-            print(f"Ошибка SMTP: {e}")
+            logger.error(f"Ошибка SMTP: {e}")
             return False
         except Exception as e:
-            print(f"Общая ошибка подключения к SMTP: {e}")
+            logger.error(f"Общая ошибка подключения к SMTP: {e}", exc_info=True)
             return False
 
     # Аналогично обновите send_welcome_email и send_test_email
@@ -199,5 +203,5 @@ class EmailService:
             return True
             
         except Exception as e:
-            print(f"Ошибка отправки welcome email: {e}")
+            logger.error(f"Ошибка отправки welcome email: {e}", exc_info=True)
             return False
